@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Découvrez une collection exclusive de plus de 1200 ebooks premium. Littérature classique, aventures, philosophie et plus encore.">
+    <title>Bibliothèque Premium - 1200+ Ebooks</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script type="module" src="js/app.js" defer></script>
+</head>
+<body>
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+    </div>
+
+    <header class="glass-header">
+        <nav>
+            <div class="logo">
+                <span class="logo-icon">📚</span>
+                <span class="logo-text">Ebook<span class="highlight">Store</span></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#featured">À la une</a></li>
+                <li><a href="#catalog">Catalogue</a></li>
+                <li><a href="#about">À propos</a></li>
+            </ul>
+            <button class="cta-button secondary" id="cart-btn">Panier (0)</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <span class="badge">Collection Exclusive</span>
+                <h1>Plongez dans un univers de <span class="gradient-text">Connaissances Infinies</span></h1>
+                <p>Accédez instantanément à plus de 1200 chefs-d'œuvre littéraires, manuels techniques et guides pratiques. Votre prochaine grande lecture commence ici.</p>
+                <div class="hero-actions">
+                    <a href="#catalog" class="cta-button primary">Explorer la collection</a>
+                    <a href="#featured" class="cta-button outline">Nouveautés</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="book-stack">
+                    <div class="book book-1"></div>
+                    <div class="book book-2"></div>
+                    <div class="book book-3"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="featured" class="featured-section">
+            <div class="section-header">
+                <h2>Sélection du moment</h2>
+                <div class="controls">
+                    <button class="icon-btn prev">←</button>
+                    <button class="icon-btn next">→</button>
+                </div>
+            </div>
+            <div class="featured-grid" id="featured-grid">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </section>
+
+        <section id="catalog" class="catalog-section">
+            <div class="section-header">
+                <h2>Catalogue Complet</h2>
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Rechercher un titre, un auteur...">
+                    <button class="search-btn">🔍</button>
+                </div>
+            </div>
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">Tout</button>
+                <button class="filter-btn" data-filter="roman">Romans</button>
+                <button class="filter-btn" data-filter="scifi">Science-Fiction</button>
+                <button class="filter-btn" data-filter="classique">Classiques</button>
+                <button class="filter-btn" data-filter="pratique">Pratique</button>
+            </div>
+            <div class="catalog-grid" id="catalog-grid">
+                <!-- Dynamically populated via JS -->
+            </div>
+            <div class="pagination">
+                <button class="page-btn disabled">Précédent</button>
+                <span class="page-info">Page 1 sur 12</span>
+                <button class="page-btn">Suivant</button>
+            </div>
+        </section>
+    </main>
+
+    <footer id="about">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>EbookStore</h3>
+                <p>La référence en matière d'ebooks numériques de qualité. Téléchargement instantané, formats compatibles tous supports.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Liens Rapides</h3>
+                <ul>
+                    <li><a href="#">Compte</a></li>
+                    <li><a href="#">Support</a></li>
+                    <li><a href="#">Conditions Générales</a></li>
+                    <li><a href="#">Politique de Confidentialité</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Newsletter</h3>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Votre email">
+                    <button type="submit">S'abonner</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 EbookStore. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Templates for JS -->
+    <template id="book-card-template">
+        <article class="book-card">
+            <div class="book-cover">
+                <span class="book-category-badge"></span>
+                <div class="book-spine"></div>
+                <div class="book-info-overlay">
+                    <button class="quick-view-btn">Aperçu</button>
+                </div>
+            </div>
+            <div class="book-details">
+                <h3 class="book-title"></h3>
+                <p class="book-author"></p>
+                <div class="book-meta">
+                    <span class="book-price"></span>
+                    <button class="add-to-cart-btn">Ajouter</button>
+                </div>
+            </div>
+        </article>
+    </template>
+</body>
+</html>
