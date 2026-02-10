@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Découvrez une collection exclusive de plus de 1200 ebooks premium. Littérature classique, aventures, philosophie et plus encore.">
+    <meta name="description"
+        content="Découvrez une collection exclusive de plus de 1200 ebooks premium. Littérature classique, aventures, philosophie et plus encore.">
     <title>Bibliothèque Premium - 1200+ Ebooks</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
     <script type="module" src="js/app.js" defer></script>
 </head>
+
 <body>
     <div class="background-globes">
         <div class="globe globe-1"></div>
@@ -35,7 +40,8 @@
             <div class="hero-content">
                 <span class="badge">Collection Exclusive</span>
                 <h1>Plongez dans un univers de <span class="gradient-text">Connaissances Infinies</span></h1>
-                <p>Accédez instantanément à plus de 1200 chefs-d'œuvre littéraires, manuels techniques et guides pratiques. Votre prochaine grande lecture commence ici.</p>
+                <p>Accédez instantanément à plus de 1200 chefs-d'œuvre littéraires, manuels techniques et guides
+                    pratiques. Votre prochaine grande lecture commence ici.</p>
                 <div class="hero-actions">
                     <a href="#catalog" class="cta-button primary">Explorer la collection</a>
                     <a href="#featured" class="cta-button outline">Nouveautés</a>
@@ -92,50 +98,75 @@
     <footer id="about">
         <div class="footer-content">
             <div class="footer-column">
-                <h3>EbookStore</h3>
-                <p>La référence en matière d'ebooks numériques de qualité. Téléchargement instantané, formats compatibles tous supports.</p>
+                <h3>SmartFlow Automation</h3>
+                <p>La référence en matière d'ebooks numériques de qualité. Accompagnement intelligent pour votre succès.
+                    📧 contact@smartflowautomation.site</p>
             </div>
             <div class="footer-column">
-                <h3>Liens Rapides</h3>
+                <h3>Lien Utiles</h3>
                 <ul>
-                    <li><a href="#">Compte</a></li>
-                    <li><a href="#">Support</a></li>
-                    <li><a href="#">Conditions Générales</a></li>
-                    <li><a href="#">Politique de Confidentialité</a></li>
+                    <li><a href="#">Support Client</a></li>
+                    <li><a href="#">Conditions de Vente</a></li>
+                    <li><a href="#">Protection des Données</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h3>Newsletter</h3>
                 <form class="newsletter-form">
-                    <input type="email" placeholder="Votre email">
+                    <input type="email" placeholder="Votre email pro">
                     <button type="submit">S'abonner</button>
                 </form>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 EbookStore. Tous droits réservés.</p>
+            <p>&copy; 2026 SmartFlow Automation (smartflowautomation.site). Tous droits réservés.</p>
         </div>
     </footer>
+
+    <!-- Checkout Modal -->
+    <div class="modal-overlay" id="checkout-modal">
+        <div class="checkout-modal">
+            <h2>Finaliser votre achat</h2>
+            <p>Saisissez l'opportunité d'enrichir votre bibliothèque immédiatement.</p>
+            <div class="total-display" id="checkout-total">0.00€</div>
+
+            <div class="payment-options">
+                <button class="payment-btn paypal">
+                    <span>💳 Payer avec PayPal</span>
+                </button>
+                <button class="payment-btn skrill">
+                    <span>🟣 Payer avec Skrill</span>
+                </button>
+            </div>
+
+            <button class="close-modal" id="close-modal">Annuler et continuer mes achats</button>
+        </div>
+    </div>
 
     <!-- Templates for JS -->
     <template id="book-card-template">
         <article class="book-card">
-            <div class="book-cover">
-                <span class="book-category-badge"></span>
+            <div class="book-wrapper">
+                <div class="book-cover">
+                    <!-- Glassy Overlay & Content -->
+                    <span class="book-category-badge"></span>
+                    <div class="book-content-visual">
+                        <div>
+                            <h3 class="book-title-visual"></h3>
+                            <p class="book-author-visual"></p>
+                        </div>
+                        <div class="book-decoration">✦</div>
+                    </div>
+                </div>
                 <div class="book-spine"></div>
-                <div class="book-info-overlay">
-                    <button class="quick-view-btn">Aperçu</button>
-                </div>
+                <div class="book-pages"></div>
             </div>
-            <div class="book-details">
-                <h3 class="book-title"></h3>
-                <p class="book-author"></p>
-                <div class="book-meta">
-                    <span class="book-price"></span>
-                    <button class="add-to-cart-btn">Ajouter</button>
-                </div>
+            <div class="book-info-panel">
+                <span class="book-price-tag"></span>
+                <button class="add-to-cart-btn">Ajouter au Panier</button>
             </div>
         </article>
     </template>
 </body>
+
 </html>
