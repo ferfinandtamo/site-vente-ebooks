@@ -1,4 +1,6 @@
-import { ebooks } from '../data/ebooks.js';
+import { supabase } from './supabase.js';
+
+let ebooks = []; // Local cache for visible ebooks
 
 // DOM Elements
 const featuredGrid = document.getElementById('featured-grid');
@@ -16,13 +18,33 @@ const checkoutTotalDisplay = document.getElementById('checkout-total');
 let currentFilter = 'all';
 
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    initFeatured();
-    initCatalog();
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadInitialData();
+    initChatbot();
     setupEventListeners();
     setupPaymentListeners();
     animateBackground();
 });
+
+async function loadInitialData() {
+    const { data, error } = await supabase
+        .from('ebooks')
+        .select('*')
+        .limit(20); // Initial load for UI
+
+    if (error) {
+        console.error('Error fetching ebooks:', error);
+        return;
+    }
+
+    ebooks = data.map(b => ({
+        ...b,
+        coverColor: b.cover_color // Map DB name back to UI name
+    }));
+
+    initFeatured();
+    initCatalog();
+}
 
 function createBookCard(book) {
     const clone = bookTemplate.content.cloneNode(true);
@@ -115,8 +137,22 @@ function setupEventListeners() {
     });
 
     // Search
-    searchInput.addEventListener('input', (e) => {
-        filterBooks(e.target.value.toLowerCase());
+    searchInput.addEventListener('input', async (e) => {
+        const term = e.target.value.toLowerCase();
+        if (term.length > 2) {
+            const { data } = await supabase
+                .from('ebooks')
+                .select('*')
+                .or(`title.ilike.%${term}%,author.ilike.%${term}%`)
+                .limit(50);
+
+            if (data) {
+                const results = data.map(b => ({ ...b, coverColor: b.cover_color }));
+                renderCatalog(results);
+            }
+        } else if (term === '') {
+            initCatalog(); // Show default initial set
+        }
     });
 
     // Cart Button Click
@@ -155,26 +191,17 @@ function setupPaymentListeners() {
 }
 
 function filterBooks(searchTerm = '') {
-    let filtered = ebooks;
-
-    // Category Filter
     if (currentFilter !== 'all') {
-        filtered = filtered.filter(book => {
-            if (currentFilter === 'roman') return book.category === 'Roman' || book.category === 'Thriller';
-            if (currentFilter === 'scifi') return book.category === 'Science-Fiction';
-            return book.category.toLowerCase().includes(currentFilter);
+        const filtered = ebooks.filter(book => {
+            const bCat = book.category.toLowerCase();
+            if (currentFilter === 'roman') return bCat === 'roman' || bCat === 'thriller';
+            if (currentFilter === 'scifi') return bCat === 'science-fiction';
+            return bCat.includes(currentFilter);
         });
+        renderCatalog(filtered);
+    } else {
+        initCatalog();
     }
-
-    // Search Filter
-    if (searchTerm) {
-        filtered = filtered.filter(book =>
-            book.title.toLowerCase().includes(searchTerm) ||
-            book.author.toLowerCase().includes(searchTerm)
-        );
-    }
-
-    renderCatalog(filtered);
 }
 
 function addToCart(book) {
@@ -323,9 +350,9 @@ function initChatbot() {
 
         showTyping();
 
-        setTimeout(() => {
+        setTimeout(async () => {
             removeTyping();
-            const response = getBotResponse(text);
+            const response = await getBotResponse(text);
             addMessage(response, 'bot');
         }, 800 + Math.random() * 500);
     }
@@ -364,7 +391,7 @@ function initChatbot() {
     };
 }
 
-function getBotResponse(input) {
+async function getBotResponse(input) {
     let lowerInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
     // Handle Follow-up intents (Introduction request)
@@ -383,77 +410,49 @@ function getBotResponse(input) {
         return SALES_SCRIPTS.greetings[Math.floor(Math.random() * SALES_SCRIPTS.greetings.length)];
     }
 
-    // Hardcoded normalization for common typos reported by user
-    const commonNorms = {
-        'romence': 'roman',
-        'romant': 'roman',
-        'guidde': 'guide',
-        'bizness': 'business',
-        'bisness': 'business',
-        'philosophie': 'philosophie',
-        'scifi': 'science-fiction',
-        'sf': 'science-fiction'
+    // Normalisation de base
+    const genres = {
+        'roman': 'Roman',
+        'business': 'Business',
+        'science-fiction': 'Science-Fiction',
+        'scifi': 'Science-Fiction',
+        'classique': 'Classique',
+        'pratique': 'Pratique'
     };
 
-    Object.keys(commonNorms).forEach(typo => {
-        if (lowerInput.includes(typo)) {
-            lowerInput = lowerInput.replace(typo, commonNorms[typo]);
-        }
+    let targetGenre = null;
+    Object.keys(genres).forEach(g => {
+        if (lowerInput.includes(g)) targetGenre = genres[g];
     });
 
-    // Special category detection
-    const genres = ['roman', 'business', 'science-fiction', 'classique', 'pratique', 'divers'];
-    let detectedGenre = genres.find(g => lowerInput.includes(g));
+    // Query Supabase for best match
+    // Use Full Text Search (fts) we created in schema
+    let query = supabase.from('ebooks').select('*');
 
-    // Search keywords
-    let keywords = lowerInput.split(' ').filter(k => k.length > 2);
+    if (targetGenre) {
+        query = query.eq('category', targetGenre);
+    }
 
-    // Fuzzy match for keywords against genres if nothing found
-    if (!detectedGenre) {
-        keywords.forEach(k => {
-            genres.forEach(g => {
-                if (levenshtein(k, g) <= 1) detectedGenre = g;
-            });
+    // Filter by keywords found in input
+    const keywords = lowerInput.split(' ').filter(w => w.length > 3);
+    if (keywords.length > 0) {
+        const searchStr = keywords.join(' | ');
+        // If we have keywords, use text search or ilike
+        query = query.textSearch('fts', searchStr, {
+            config: 'french',
+            type: 'phrase'
         });
     }
 
-    let matches = ebooks.filter(book => {
-        const bTitle = book.title.toLowerCase();
-        const bAuthor = book.author.toLowerCase();
-        const bCat = book.category.toLowerCase();
+    const { data: matches, error } = await query.limit(1);
 
-        let score = 0;
-
-        // Priority to category if detected
-        if (detectedGenre && bCat.includes(detectedGenre)) score += 10;
-
-        keywords.forEach(k => {
-            if (bTitle.includes(k)) score += 5;
-            if (bAuthor.includes(k)) score += 3;
-            if (bCat.includes(k)) score += 2;
-
-            // Fuzzy match on title words
-            bTitle.split(' ').forEach(tw => {
-                if (tw.length > 3 && levenshtein(k, tw) <= 1) score += 2;
-            });
-        });
-        return score > 1;
-    });
-
-    if (matches.length > 0) {
-        const bestMatch = matches.sort((a, b) => {
-            // Re-calculate scores for sorting
-            const scoreA = keywords.reduce((s, k) => s + (bookScore(a, k, detectedGenre)), 0);
-            const scoreB = keywords.reduce((s, k) => s + (bookScore(b, k, detectedGenre)), 0);
-            return scoreB - scoreA;
-        })[0];
-
+    if (matches && matches.length > 0) {
+        const bestMatch = { ...matches[0], coverColor: matches[0].cover_color };
         chatContext.lastBook = bestMatch;
 
         const pitchTemplate = SALES_SCRIPTS.pitches[Math.floor(Math.random() * SALES_SCRIPTS.pitches.length)];
-        const closingTemplate = SALES_SCRIPTS.closing[Math.floor(Math.random() * SALES_SCRIPTS.closing.length)];
 
-        return `J'ai trouvé exactement ce qu'il vous faut ! ✨<br><br>
+        return `J'ai trouvé une pépite pour vous ! ✨<br><br>
                 <b>📚 ${bestMatch.title}</b><br>
                 <i>par ${bestMatch.author}</i><br><br>
                 ${pitchTemplate.replace('{category}', bestMatch.category)}<br><br>

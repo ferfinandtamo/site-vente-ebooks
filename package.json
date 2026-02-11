@@ -1,0 +1,25 @@
+{
+  "name": "site-vente-ebooks",
+  "version": "1.0.0",
+  "description": "Bienvenue sur le projet **EbookStore**, une plateforme moderne et responsive pour la vente d'ebooks.\r Ce projet a été généré automatiquement avec une structure professionnelle prête pour la production.",
+  "main": "generate-data.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ferfinandtamo/site-vente-ebooks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ferfinandtamo/site-vente-ebooks/issues"
+  },
+  "homepage": "https://github.com/ferfinandtamo/site-vente-ebooks#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.95.3"
+  }
+}
