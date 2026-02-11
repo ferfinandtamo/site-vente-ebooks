@@ -14,6 +14,10 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function migrate() {
+    console.log(`🚀 Nettoyage de la base de données existante...`);
+    const { error: deleteError } = await supabase.from('ebooks').delete().neq('id', '0');
+    if (deleteError) console.error("⚠️ Erreur lors du nettoyage:", deleteError.message);
+
     console.log(`🚀 Début de la migration de ${ebooks.length} ebooks...`);
 
     // Préparation des données pour Supabase (mapping des clés)

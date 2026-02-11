@@ -1,7 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT_DIR = path.resolve('../');
+const ROOT_DIRS = [
+    path.resolve('f:/MesFormations/Pack 1200 Ebooks'),
+    path.resolve('f:/MesFormations/EBOOKS-20251022T013313Z-1-001/EBOOKS'),
+    path.resolve('f:/MesFormations/amour et sex-20251028T012407Z-1-001/amour et sex')
+];
 const OUTPUT_FILE = path.join(__dirname, 'data', 'ebooks.js');
 const EXTENSIONS = ['.pdf', '.epub', '.mobi'];
 
@@ -33,10 +37,10 @@ const THEMES = {
 
 // Mots-clés pour mapper le contenu au thème
 const KEYWORDS = {
-    business: ['argent', 'rich', 'succès', 'marketing', 'vente', 'business', 'money', 'entreprise', 'bourse', 'crypto', 'bitcoin'],
-    romance: ['amour', 'love', 'coeur', 'passion', 'mariage', 'femme', 'homme', 'baiser', 'romance'],
-    scifi: ['futur', 'espace', 'galaxie', 'robot', 'ia', 'alien', 'science', 'tech', 'cyber'],
-    classic: ['histoire', 'guerre', 'siècle', 'roi', 'dieu', 'philosophie', 'art', 'poésie']
+    business: ['argent', 'rich', 'succès', 'marketing', 'vente', 'business', 'money', 'entreprise', 'bourse', 'crypto', 'bitcoin', 'trading', 'management', 'leadership', 'financiere'],
+    romance: ['amour', 'love', 'coeur', 'passion', 'mariage', 'femme', 'homme', 'baiser', 'romance', 'sex'],
+    scifi: ['futur', 'espace', 'galaxie', 'robot', 'ia', 'alien', 'science', 'tech', 'cyber', 'chatgpt'],
+    classic: ['histoire', 'guerre', 'siècle', 'roi', 'dieu', 'philosophie', 'art', 'poésie', 'psychologie', 'medecine', 'classique']
 };
 
 function getThemeByTitle(title) {
@@ -55,6 +59,7 @@ function getThemeByTitle(title) {
 }
 
 function scanDirectory(dir, fileList = []) {
+    if (!fs.existsSync(dir)) return fileList;
     const files = fs.readdirSync(dir);
     files.forEach(file => {
         const filePath = path.join(dir, file);
@@ -90,12 +95,13 @@ function parseFileInfo(filePath) {
     // Catégorie intelligente
     let category = "Divers";
     const lowerTitle = title.toLowerCase();
+    const lowerPath = filePath.toLowerCase();
 
-    if (KEYWORDS.business.some(w => lowerTitle.includes(w))) category = "Business";
-    else if (KEYWORDS.romance.some(w => lowerTitle.includes(w))) category = "Roman";
-    else if (KEYWORDS.scifi.some(w => lowerTitle.includes(w))) category = "Science-Fiction";
-    else if (KEYWORDS.classic.some(w => lowerTitle.includes(w))) category = "Classique";
-    else if (lowerTitle.includes('tuto') || lowerTitle.includes('guide')) category = "Pratique";
+    if (KEYWORDS.business.some(w => lowerTitle.includes(w) || lowerPath.includes(w))) category = "Business";
+    else if (KEYWORDS.romance.some(w => lowerTitle.includes(w) || lowerPath.includes(w))) category = "Roman";
+    else if (KEYWORDS.scifi.some(w => lowerTitle.includes(w) || lowerPath.includes(w))) category = "Science-Fiction";
+    else if (KEYWORDS.classic.some(w => lowerTitle.includes(w) || lowerPath.includes(w))) category = "Classique";
+    else if (lowerTitle.includes('tuto') || lowerTitle.includes('guide') || lowerPath.includes('sport')) category = "Pratique";
 
     // Random price logic
     let price = 9.99;
@@ -115,7 +121,8 @@ function parseFileInfo(filePath) {
 }
 
 console.log("🎨 Génération des Mockups Premium...");
-const allFiles = scanDirectory(ROOT_DIR);
+const allFiles = [];
+ROOT_DIRS.forEach(dir => scanDirectory(dir, allFiles));
 console.log(`📚 ${allFiles.length} fichiers trouvés.`);
 
 const ebooksData = allFiles.map(parseFileInfo);
