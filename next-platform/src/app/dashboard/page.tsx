@@ -43,7 +43,7 @@ export default function DashboardPage() {
                 <div className="mt-auto glass p-4 rounded-2xl border-purple-500/20">
                     <div className="text-xs text-gray-400 mb-2">Plan Actuel</div>
                     <div className="text-sm font-bold text-purple-400 mb-3">Premium Ultra</div>
-                    <button className="w-full py-2 bg-white/5 hover:bg-white/10 rounded-lg text-xs font-bold transition-all">Gérer l'abo</button>
+                    <button className="w-full py-2 bg-white/5 hover:bg-white/10 rounded-lg text-xs font-bold transition-all">Gérer l&apos;abo</button>
                 </div>
             </aside>
 
@@ -110,7 +110,7 @@ export default function DashboardPage() {
                             <div className="w-12 h-12 bg-cyan-600 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-xl shadow-cyan-900/40">🤖</div>
                             <h4 className="font-bold text-lg mb-4">Challenge Apprentissage</h4>
                             <p className="text-sm text-gray-400 leading-relaxed mb-6">
-                                Basé sur votre intérêt pour le <span className="text-white font-bold">Machine Learning</span>, je vous suggère de terminer les chapitres 4 et 5 de "Deep Work" pour optimiser votre concentration.
+                                Basé sur votre intérêt pour le <span className="text-white font-bold">Machine Learning</span>, je vous suggère de terminer les chapitres 4 et 5 de &quot;Deep Work&quot; pour optimiser votre concentration.
                             </p>
                             <button className="w-full py-4 bg-cyan-600 hover:bg-cyan-500 rounded-2xl font-bold text-sm transition-all active:scale-95 shadow-lg shadow-cyan-900/20">
                                 Lancer le Mode Focus

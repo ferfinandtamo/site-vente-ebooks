@@ -58,7 +58,7 @@ export default function LoginPage() {
                 </div>
 
                 <p className="text-center mt-8 text-sm text-gray-500 font-medium">
-                    Pas encore membre ? <Link href="/register" className="text-purple-400 hover:text-purple-300 font-bold transition-colors">Rejoignez l'élite</Link>
+                    Pas encore membre ? <Link href="/register" className="text-purple-400 hover:text-purple-300 font-bold transition-colors">Rejoignez l&apos;élite</Link>
                 </p>
             </div>
         </div>
