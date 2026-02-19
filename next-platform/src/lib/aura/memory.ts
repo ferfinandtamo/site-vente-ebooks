@@ -12,7 +12,10 @@ const openai = new OpenAI({
 
 export interface MemoryItem {
     content: string;
-    metadata?: Record<string, unknown>;
+    metadata?: {
+        type?: string;
+        [key: string]: unknown;
+    };
 }
 
 export class AuraMemory {
