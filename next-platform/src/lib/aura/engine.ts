@@ -19,7 +19,7 @@ export class AuraEngine {
         ]);
 
         const contextStr = memories.map(m => `- ${m.content}`).join('\n');
-        const psychProfile = memories.find((m: any) => m.metadata?.type === 'user_evolution')?.content || "Profil en cours d'analyse.";
+        const psychProfile = memories.find(m => m.metadata?.type === 'user_evolution')?.content || "Profil en cours d'analyse.";
         const ebooksStr = ebooks.map(e => `- **${e.title}** : ${e.description ? e.description.substring(0, 100) + '...' : 'Pas de description.'}`).join('\n');
 
         // 4. Mode-Specific Instructions
