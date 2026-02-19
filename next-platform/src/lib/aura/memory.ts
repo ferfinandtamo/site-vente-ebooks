@@ -70,7 +70,7 @@ export class AuraMemory {
             return [];
         }
 
-        return (data as Record<string, unknown>[]) || [];
+        return (data as any[]) || [];
     }
 
     /**
@@ -90,7 +90,7 @@ export class AuraMemory {
             return [];
         }
 
-        return (data as Record<string, unknown>[]) || [];
+        return (data as any[]) || [];
     }
 
     /**
