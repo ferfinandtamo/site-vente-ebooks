@@ -18,6 +18,16 @@ export interface MemoryItem {
     };
 }
 
+export interface EbookItem {
+    id: string;
+    title: string;
+    description?: string;
+    cover_url?: string;
+    price: number;
+    author?: string;
+    category?: string;
+}
+
 export class AuraMemory {
     /**
      * Vectorize content using OpenAI embeddings
