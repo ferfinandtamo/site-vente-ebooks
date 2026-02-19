@@ -67,7 +67,7 @@ export class AuraMemory {
             return [];
         }
 
-        return data as any[];
+        return (data as Record<string, unknown>[]) || [];
     }
 
     /**
@@ -87,7 +87,7 @@ export class AuraMemory {
             return [];
         }
 
-        return data as any[];
+        return (data as Record<string, unknown>[]) || [];
     }
 
     /**

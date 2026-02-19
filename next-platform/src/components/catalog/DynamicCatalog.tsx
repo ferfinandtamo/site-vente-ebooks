@@ -145,8 +145,8 @@ export default function DynamicCatalog() {
                 </>
             ) : (
                 <div className="text-center py-20 glass rounded-3xl border-dashed border-2 border-white/5">
-                    <div className="text-4xl mb-4 animate-float">📚</div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-600 leading-tight font-heading">L&apos;Élite du <br /> Savoir</div>
+                    <div className="text-6xl mb-4 opacity-20">📚</div>
+                    <p className="text-gray-500 font-medium">Aucun ouvrage trouvé dans cette catégorie pour le moment.</p>
                 </div>
             )}
         </section>
