@@ -28,18 +28,18 @@ export default function Home() {
       <section className="relative z-10 pt-48 pb-32 px-6 max-w-7xl mx-auto text-center md:text-left flex flex-col md:flex-row items-center gap-16">
         <div className="flex-1">
           <span className="inline-block px-4 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-400 text-[10px] font-bold uppercase tracking-widest mb-6 animate-pulse">
-            Nouvelle Ére de l'Éducation Digital
+            Nouvelle Ére de l&apos;Éducation Digitale
           </span>
           <h1 className="text-7xl md:text-9xl font-black tracking-tighter leading-[0.85] mb-8 font-heading">
-            S'élever par le <br />
+            S&apos;élever par le <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Savoir Absolu</span>
           </h1>
           <p className="text-xl text-gray-400/80 max-w-xl mb-12 leading-relaxed font-sans">
-            Accédez à une collection d'élite de 1520 ebooks. Laissez <span className="text-white border-b border-cyan-500/30">Aura</span>, votre mentor IA, sculpter votre expertise dans le Trading, le Business et la Psychologie.
+            Accédez à une collection d&apos;élite de 1520 ebooks. Laissez <span className="text-white border-b border-cyan-500/30">Aura</span>, votre mentor IA, sculpter votre expertise dans le Trading, le Business et la Psychologie.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <button className="px-10 py-5 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl font-bold text-lg hover:shadow-[0_0_40px_rgba(147,51,234,0.3)] transition-all active:scale-95">
-              Démarrer l'Apprentissage
+              Démarrer l&apos;Apprentissage
             </button>
             <button className="px-10 py-5 glass rounded-2xl font-bold text-lg hover:bg-white/5 transition-all active:scale-95 border-white/5">
               Explorer le Catalogue

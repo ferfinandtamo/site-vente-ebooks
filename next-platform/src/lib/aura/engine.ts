@@ -9,7 +9,7 @@ export class AuraEngine {
     /**
      * Process a message from the user and generate an intelligent response
      */
-    static async generateResponse(userId: string, query: string, chatHistory: any[], mode: 'mentor' | 'professeur' | 'debat' | 'coach' = 'mentor') {
+    static async generateResponse(userId: string, query: string, chatHistory: OpenAI.Chat.ChatCompletionMessageParam[], mode: 'mentor' | 'professeur' | 'debat' | 'coach' = 'mentor') {
         const startTime = Date.now();
 
         // 1. Recall relevant memories (Parallelize for Speed)
@@ -62,9 +62,10 @@ export class AuraEngine {
                 ],
                 temperature: 0.8,
             });
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
             console.error("OpenAI Chat Error:", error);
-            throw new Error(`OpenAI Chat failed: ${error.message}`);
+            throw new Error(`OpenAI Chat failed: ${errorMessage}`);
         }
 
         const duration = Date.now() - startTime;

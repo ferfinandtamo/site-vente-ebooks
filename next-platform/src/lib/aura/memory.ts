@@ -12,7 +12,7 @@ const openai = new OpenAI({
 
 export interface MemoryItem {
     content: string;
-    metadata?: any;
+    metadata?: Record<string, unknown>;
 }
 
 export class AuraMemory {
@@ -26,9 +26,10 @@ export class AuraMemory {
                 input: text.replace(/\n/g, ' '),
             });
             return response.data[0].embedding;
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
             console.error("OpenAI Embedding Error:", error);
-            throw new Error(`OpenAI Embedding failed: ${error.message}`);
+            throw new Error(`OpenAI Embedding failed: ${errorMessage}`);
         }
     }
 

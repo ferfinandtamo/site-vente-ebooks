@@ -1,4 +1,5 @@
 import { supabase } from './supabase.js';
+import { ebooks as localEbooks } from '../data/ebooks.js';
 
 let ebooks = []; // Local cache for visible ebooks
 
@@ -27,19 +28,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function loadInitialData() {
-    const { data, error } = await supabase
-        .from('ebooks')
-        .select('*')
-        .limit(20); // Initial load for UI
+    // UTILISATION DES DONNÉES LOCALES (1200+ Ebooks)
+    // On simule un chargement pour l'UX
+    console.log("Chargement de " + localEbooks.length + " ebooks depuis le fichier local.");
 
-    if (error) {
-        console.error('Error fetching ebooks:', error);
-        return;
-    }
-
-    ebooks = data.map(b => ({
+    // On mélange un peu pour que ce soit vivant
+    ebooks = localEbooks.map(b => ({
         ...b,
-        coverColor: b.cover_color // Map DB name back to UI name
+        author: (!b.author || b.author.toUpperCase().includes("AUCUN AUTEUR")) ? "Édition Collection" : b.author
     }));
 
     initFeatured();
@@ -137,21 +133,20 @@ function setupEventListeners() {
     });
 
     // Search
-    searchInput.addEventListener('input', async (e) => {
+    searchInput.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
-        if (term.length > 2) {
-            const { data } = await supabase
-                .from('ebooks')
-                .select('*')
-                .or(`title.ilike.%${term}%,author.ilike.%${term}%`)
-                .limit(50);
 
-            if (data) {
-                const results = data.map(b => ({ ...b, coverColor: b.cover_color }));
-                renderCatalog(results);
-            }
+        // Recherche instantanée en local
+        if (term.length > 2) {
+            const results = ebooks.filter(book =>
+                book.title.toLowerCase().includes(term) ||
+                book.author.toLowerCase().includes(term) ||
+                book.category.toLowerCase().includes(term)
+            ).slice(0, 50);
+
+            renderCatalog(results);
         } else if (term === '') {
-            initCatalog(); // Show default initial set
+            initCatalog(); // Retour à l'état initial
         }
     });
 
@@ -175,19 +170,63 @@ function setupPaymentListeners() {
     });
 
     document.querySelector('.payment-btn.paypal').addEventListener('click', () => {
-        alert("Redirection vers PayPal sécurisé...");
-        window.location.href = "https://www.paypal.com/checkoutnow";
+        simulatePayment('PayPal');
     });
 
     document.querySelector('.payment-btn.skrill').addEventListener('click', () => {
-        alert("Connexion à Skrill...");
-        window.location.href = "https://www.skrill.com/pay";
+        simulatePayment('Skrill');
     });
 
     // Close on outside click
     checkoutModal.addEventListener('click', (e) => {
         if (e.target === checkoutModal) checkoutModal.classList.remove('open');
     });
+}
+
+async function simulatePayment(method) {
+    const btn = document.querySelector(`.payment-btn.${method.toLowerCase()}`);
+    const originalText = btn.innerHTML;
+
+    // UI Feedback: Loading
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner"></span> Traitement sécurisé...`;
+
+    await new Promise(r => setTimeout(r, 2000));
+
+    // UI Feedback: Success
+    showToast(`✅ Succès ! Votre commande via ${method} a été validée.`, "success");
+
+    // Clear Cart
+    cart = [];
+    cartBtn.textContent = `Panier (0)`;
+
+    setTimeout(() => {
+        checkoutModal.classList.remove('open');
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+
+        // Final persuasive bot message
+        if (window.botFunctions) {
+            window.botFunctions.addMessage("Félicitations pour votre achat ! 🎉 Vos ebooks sont maintenant accessibles dans votre bibliothèque numérique.", "bot");
+        }
+    }, 1000);
+}
+
+function showToast(message, type = "info") {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 500);
+    }, 4000);
 }
 
 function filterBooks(searchTerm = '') {
@@ -207,6 +246,7 @@ function filterBooks(searchTerm = '') {
 function addToCart(book) {
     cart.push(book);
     cartBtn.textContent = `Panier (${cart.length})`;
+    showToast(`"${book.title}" ajouté au panier !`);
 
     // Simple animation
     cartBtn.style.transform = 'scale(1.1)';
@@ -417,7 +457,7 @@ async function getBotResponse(input) {
         'science-fiction': 'Science-Fiction',
         'scifi': 'Science-Fiction',
         'classique': 'Classique',
-        'pratique': 'Pratique'
+        'pratique': 'Divers'
     };
 
     let targetGenre = null;
@@ -425,39 +465,56 @@ async function getBotResponse(input) {
         if (lowerInput.includes(g)) targetGenre = genres[g];
     });
 
-    // Query Supabase for best match
-    // Use Full Text Search (fts) we created in schema
-    let query = supabase.from('ebooks').select('*');
+    // RECHERCHE INTELLIGENTE (Fuzzy Logic sur données locales)
+    let bestMatch = null;
+    let maxScore = 0;
 
-    if (targetGenre) {
-        query = query.eq('category', targetGenre);
-    }
+    ebooks.forEach(book => {
+        let score = 0;
+        const titleLower = book.title.toLowerCase();
+        const authorLower = book.author.toLowerCase();
 
-    // Filter by keywords found in input
-    const keywords = lowerInput.split(' ').filter(w => w.length > 3);
-    if (keywords.length > 0) {
-        const searchStr = keywords.join(' | ');
-        // If we have keywords, use text search or ilike
-        query = query.textSearch('fts', searchStr, {
-            config: 'french',
-            type: 'phrase'
+        // 1. Correspondance exacte ou partielle forte
+        if (titleLower.includes(lowerInput)) score += 50;
+        if (authorLower.includes(lowerInput)) score += 30;
+
+        // 2. Genre correspondant
+        if (targetGenre && book.category === targetGenre) score += 20;
+
+        // 3. Distance de Levenshtein (Tolérance aux fautes)
+        // On vérifie si un mot de l'input est proche d'un mot du titre
+        const inputWords = lowerInput.split(' ');
+        const titleWords = titleLower.split(' ');
+
+        inputWords.forEach(iWord => {
+            if (iWord.length < 4) return; // Ignorer les petits mots
+            titleWords.forEach(tWord => {
+                const dist = levenshtein(iWord, tWord);
+                if (dist <= 2) score += 15; // Proche
+                if (dist === 0) score += 10; // Exact (bonus)
+            });
         });
-    }
 
-    const { data: matches, error } = await query.limit(1);
+        // Aléatoire léger pour varier les réponses si égalité
+        score += Math.random() * 5;
 
-    if (matches && matches.length > 0) {
-        const bestMatch = { ...matches[0], coverColor: matches[0].cover_color };
+        if (score > maxScore) {
+            maxScore = score;
+            bestMatch = book;
+        }
+    });
+
+    // Seuil minimal pour considérer que c'est une bonne réponse
+    if (bestMatch && maxScore > 25) {
         chatContext.lastBook = bestMatch;
-
         const pitchTemplate = SALES_SCRIPTS.pitches[Math.floor(Math.random() * SALES_SCRIPTS.pitches.length)];
 
-        return `J'ai trouvé une pépite pour vous ! ✨<br><br>
+        return `J'ai trouvé une lecture parfaite pour ça ! ✨<br><br>
                 <b>📚 ${bestMatch.title}</b><br>
                 <i>par ${bestMatch.author}</i><br><br>
                 ${pitchTemplate.replace('{category}', bestMatch.category)}<br><br>
                 Prix : <b>${bestMatch.price.toFixed(2)}€</b><br><br>
-                Voulez-vous une petite introduction ou l'ajouter au panier ?`;
+                <button class="chat-action-btn" onclick="document.getElementById('search-input').value='${bestMatch.title}'; document.getElementById('search-input').dispatchEvent(new Event('input'));">Voir dans le catalogue</button>`;
     }
 
     return SALES_SCRIPTS.notFound[Math.floor(Math.random() * SALES_SCRIPTS.notFound.length)];

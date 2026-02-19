@@ -90,7 +90,7 @@ export default function AuraBot() {
                                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-2xl flex items-center justify-center text-lg shadow-xl shadow-purple-900/40">✨</div>
                                 <div>
                                     <span className="font-bold text-lg tracking-tight block">Aura AI Mentor</span>
-                                    <span className="text-[10px] text-cyan-400 uppercase tracking-widest font-bold">Intelligence d'Élite</span>
+                                    <span className="text-[10px] text-cyan-400 uppercase tracking-widest font-bold">Intelligence d&apos;Élite</span>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
@@ -110,7 +110,7 @@ export default function AuraBot() {
                             {modes.map((m) => (
                                 <button
                                     key={m.id}
-                                    onClick={() => setMode(m.id as any)}
+                                    onClick={() => setMode(m.id as 'mentor' | 'professeur' | 'debat' | 'coach')}
                                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[11px] font-bold transition-all ${mode === m.id
                                         ? 'bg-purple-600 text-white shadow-lg'
                                         : 'text-gray-400 hover:text-gray-200'

@@ -14,8 +14,9 @@ export async function POST(req: NextRequest) {
         const response = await AuraEngine.generateResponse(userId, query, messages || [], mode || 'mentor');
 
         return NextResponse.json({ text: response });
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
         console.error("Aura API Error:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
 }

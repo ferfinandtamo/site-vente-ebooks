@@ -22,7 +22,7 @@ export default function BookCard({ ebook }: { ebook: Ebook }) {
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#05050a]">
                         <div className="text-4xl mb-4 animate-float">📚</div>
-                        <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-600 leading-tight font-heading">L'Élite du <br /> Savoir</div>
+                        <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-600 leading-tight font-heading">L&apos;Élite du <br /> Savoir</div>
                     </div>
                 )}
                 <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-xl px-3 py-1.5 rounded-full text-[9px] font-bold text-white/70 border border-white/10 uppercase tracking-widest">

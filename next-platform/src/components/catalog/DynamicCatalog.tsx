@@ -138,15 +138,15 @@ export default function DynamicCatalog() {
                                 onClick={() => setDisplayCount(prev => prev + 12)}
                                 className="bg-white/5 border border-white/10 px-12 py-5 rounded-2xl text-[12px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all active:scale-95 group"
                             >
-                                <span className="group-hover:mr-2 transition-all">Charger plus d'ouvrages</span>
+                                <span className="group-hover:mr-2 transition-all">Charger plus d&apos;ouvrages</span>
                             </button>
                         </div>
                     )}
                 </>
             ) : (
                 <div className="text-center py-20 glass rounded-3xl border-dashed border-2 border-white/5">
-                    <div className="text-6xl mb-4 opacity-20">📚</div>
-                    <p className="text-gray-500 font-medium">Aucun ouvrage trouvé dans cette catégorie pour le moment.</p>
+                    <div className="text-4xl mb-4 animate-float">📚</div>
+                    <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-600 leading-tight font-heading">L&apos;Élite du <br /> Savoir</div>
                 </div>
             )}
         </section>
