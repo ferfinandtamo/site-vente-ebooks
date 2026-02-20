@@ -1,15 +1,26 @@
 import OpenAI from 'openai';
 import { AuraMemory } from './memory';
 
+const openaiApiKey = process.env.OPENAI_API_KEY;
+
+if (!openaiApiKey) {
+    throw new Error("Missing OpenAI environment variable: OPENAI_API_KEY");
+}
+
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: openaiApiKey,
 });
 
 export class AuraEngine {
     /**
      * Process a message from the user and generate an intelligent response
      */
-    static async generateResponse(userId: string, query: string, chatHistory: OpenAI.Chat.ChatCompletionMessageParam[], mode: 'mentor' | 'professeur' | 'debat' | 'coach' = 'mentor') {
+    static async generateResponse(
+        userId: string,
+        query: string,
+        chatHistory: OpenAI.Chat.ChatCompletionMessageParam[],
+        mode: 'mentor' | 'professeur' | 'debat' | 'coach' = 'mentor'
+    ): Promise<string | null> {
         const startTime = Date.now();
 
         // 1. Recall relevant memories (Parallelize for Speed)
@@ -71,16 +82,17 @@ export class AuraEngine {
         const duration = Date.now() - startTime;
         console.log(`[Aura Monitor] User: ${userId} | Mode: ${mode} | Latency: ${duration}ms | Tokens: ${response.usage?.total_tokens || 'unknown'}`);
 
-        const answer = response.choices[0].message.content;
+        const answer = response.choices?.[0]?.message?.content || null;
 
         // 4. Background task: If the query contains important info, save it to memory
-        // (In a real app, this should be an async background job)
-        this.extractAndSaveMemory(userId, query, answer || "");
+        if (answer) {
+            this.extractAndSaveMemory(userId, query, answer);
+        }
 
         return answer;
     }
 
-    private static async extractAndSaveMemory(userId: string, query: string, answer: string) {
+    private static async extractAndSaveMemory(userId: string, query: string, answer: string): Promise<void> {
         // 1. Immediate save for explicit intentions
         const triggerWords = ['je veux', 'mon but', 'j\'aime', 'passion', 'travaille', 'objectif'];
         if (triggerWords.some(w => query.toLowerCase().includes(w))) {
@@ -91,8 +103,6 @@ export class AuraEngine {
         }
 
         // 2. Periodic Consolidation (Evolutionary Brain)
-        // In a real environment, we'd check the message count. 
-        // Here we simulate a trigger if the user asks for a summary or after a long exchange.
         if (query.toLowerCase().includes('résume') || query.length > 500) {
             await AuraMemory.consolidate(userId, `User: ${query}\nAura: ${answer}`);
         }
