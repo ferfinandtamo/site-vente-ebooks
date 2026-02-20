@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import React from 'react';
 
 interface Ebook {
@@ -18,7 +19,13 @@ export default function BookCard({ ebook }: { ebook: Ebook }) {
         <div className="group relative glass-card rounded-3xl p-5 transition-all duration-500 cursor-pointer">
             <div className="aspect-[3/4] rounded-2xl bg-gradient-to-br from-gray-900 to-black overflow-hidden relative border border-white/5 mb-5 shadow-2xl">
                 {ebook.cover_url ? (
-                    <img src={ebook.cover_url} alt={ebook.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <Image
+                        src={ebook.cover_url}
+                        alt={ebook.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#05050a]">
                         <div className="text-4xl mb-4 animate-float">📚</div>
