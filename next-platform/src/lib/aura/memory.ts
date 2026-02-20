@@ -1,13 +1,22 @@
 import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
 
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const openaiApiKey = process.env.OPENAI_API_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+    throw new Error("Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY");
+}
+
+if (!openaiApiKey) {
+    throw new Error("Missing OpenAI environment variable: OPENAI_API_KEY");
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: openaiApiKey,
 });
 
 export interface MemoryItem {
@@ -66,7 +75,14 @@ export class AuraMemory {
      * Retrieve relevant memories based on a query
      */
     static async recall(userId: string, query: string, count = 5): Promise<MemoryItem[]> {
-        const embedding = await this.getEmbedding(query);
+        let embedding: number[];
+        try {
+            embedding = await this.getEmbedding(query);
+            if (!embedding || embedding.length === 0) return [];
+        } catch (error) {
+            console.error("Recall: Embedding failed", error);
+            return [];
+        }
 
         const { data, error } = await supabase.rpc('match_aura_memory', {
             query_embedding: embedding,
@@ -80,14 +96,22 @@ export class AuraMemory {
             return [];
         }
 
-        return (data as MemoryItem[]) || [];
+        if (!Array.isArray(data)) return [];
+        return data as MemoryItem[];
     }
 
     /**
      * Search for ebooks semantically
      */
     static async searchEbooks(query: string, count = 3): Promise<EbookItem[]> {
-        const embedding = await this.getEmbedding(query);
+        let embedding: number[];
+        try {
+            embedding = await this.getEmbedding(query);
+            if (!embedding || embedding.length === 0) return [];
+        } catch (error) {
+            console.error("SearchEbooks: Embedding failed", error);
+            return [];
+        }
 
         const { data, error } = await supabase.rpc('match_ebooks', {
             query_embedding: embedding,
@@ -100,7 +124,8 @@ export class AuraMemory {
             return [];
         }
 
-        return (data as EbookItem[]) || [];
+        if (!Array.isArray(data)) return [];
+        return data as EbookItem[];
     }
 
     /**
@@ -115,7 +140,7 @@ export class AuraMemory {
             ]
         });
 
-        const summary = response.choices[0].message.content;
+        const summary = response.choices?.[0]?.message?.content;
         if (summary) {
             await this.save(userId, {
                 content: `Mise à jour du profil : ${summary}`,
