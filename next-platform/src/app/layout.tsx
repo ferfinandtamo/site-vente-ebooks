@@ -15,11 +15,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "EbookStore Elite | L'Avenir du Savoir Digital",
-  description: "Accédez à plus de 1500 ebooks premium. Mentorat IA personnalisé, design futuriste et apprentissage auto-évolutif. Dominez votre expertise dès aujourd'hui.",
+  description: "Accédez à plus de 1500 ebooks premium. Mentorat IA personnalisé avec Ferdy, design futuriste et apprentissage auto-évolutif. Dominez votre expertise dès aujourd'hui.",
   keywords: ["ebooks", "intelligence artificielle", "mentoring", "trading", "business", "développement personnel", "premium"],
   openGraph: {
-    title: "EbookStore Elite | Marketplace IA",
-    description: "La première marketplace d'ebooks propulsée par l'IA Aura.",
+    title: "EbookStore Elite | Marketplace IA avec Ferdy",
+    description: "La première marketplace d'ebooks propulsée par l'intelligence Ferdy.",
     type: "website",
   }
 };

@@ -8,7 +8,7 @@ export default function AuraBot() {
     const [isLoading, setIsLoading] = useState(false);
     const [mode, setMode] = useState<'mentor' | 'professeur' | 'debat' | 'coach'>('mentor');
     const [messages, setMessages] = useState([
-        { role: 'bot', text: "Bonjour Ferdinand ! Je suis **Aura**, votre Guide Mentor IA. Je connais vos 1520 ouvrages et j'apprends de chaque échange. Comment puis-je vous aider à évoluer aujourd'hui ?" }
+        { role: 'bot', text: "Bonjour Ferdinand ! Je suis **Ferdy**, votre Guide Mentor IA. Je connais vos 1520 ouvrages et j'apprends de chaque échange. Comment puis-je vous aider à évoluer aujourd'hui ?" }
     ]);
     const [input, setInput] = useState('');
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -44,10 +44,10 @@ export default function AuraBot() {
                 setMessages(prev => [...prev, { role: 'bot', text: data.text }]);
             } else {
                 const errorMsg = data.error || "Désolé, j'ai rencontré une petite perturbation dans ma matrice. Réessayez ?";
-                setMessages(prev => [...prev, { role: 'bot', text: `⚠️ **Aura Error:** ${errorMsg}` }]);
+                setMessages(prev => [...prev, { role: 'bot', text: `⚠️ **Ferdy Error:** ${errorMsg}` }]);
             }
         } catch (error) {
-            console.error("Aura connection error:", error);
+            console.error("Ferdy connection error:", error);
             setMessages(prev => [...prev, { role: 'bot', text: "Je n'arrive pas à me connecter à ma mémoire centrale. Vérifiez votre connexion ou l'API Key." }]);
         } finally {
             setIsLoading(false);
@@ -72,7 +72,7 @@ export default function AuraBot() {
                     <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-gradient-to-tr from-purple-600 to-cyan-600 rounded-full flex items-center justify-center text-xl shadow-lg">✨</div>
                         <div className="text-left">
-                            <div className="text-sm font-bold">Aura Intelligence</div>
+                            <div className="text-sm font-bold">Ferdy Intelligence</div>
                             <div className="text-[10px] text-cyan-400 flex items-center gap-1">
                                 <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span> Apprentissage actif
                             </div>
@@ -89,7 +89,7 @@ export default function AuraBot() {
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-2xl flex items-center justify-center text-lg shadow-xl shadow-purple-900/40">✨</div>
                                 <div>
-                                    <span className="font-bold text-lg tracking-tight block">Aura AI Mentor</span>
+                                    <span className="font-bold text-lg tracking-tight block">Ferdy AI Mentor</span>
                                     <span className="text-[10px] text-cyan-400 uppercase tracking-widest font-bold">Intelligence d&apos;Élite</span>
                                 </div>
                             </div>
@@ -126,7 +126,7 @@ export default function AuraBot() {
                     <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar scroll-smooth">
                         <div className="flex justify-start">
                             <div className="glass p-4 rounded-3xl rounded-tl-none border-white/5 text-sm text-purple-300 italic">
-                                Aura est en mode **{mode.toUpperCase()}**.
+                                Ferdy est en mode **{mode.toUpperCase()}**.
                             </div>
                         </div>
                         {messages.map((m, i) => (

@@ -16,7 +16,7 @@ export default function Home() {
         </div>
         <div className="hidden md:flex space-x-12 text-[10px] uppercase font-bold tracking-[0.3em] text-gray-500">
           <Link href="#collection" className="hover:text-white transition-all">Collections</Link>
-          <Link href="#aura" className="hover:text-white transition-all">Aura IA</Link>
+          <Link href="#aura" className="hover:text-white transition-all">Ferdy IA</Link>
           <Link href="/login" className="hover:text-white transition-all">Elite Access</Link>
         </div>
         <button className="px-8 py-3 bg-white text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-purple-600 hover:text-white transition-all active:scale-95 shadow-2xl shadow-white/5">
@@ -35,7 +35,7 @@ export default function Home() {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Savoir Absolu</span>
           </h1>
           <p className="text-xl text-gray-400/80 max-w-xl mb-12 leading-relaxed font-sans">
-            Accédez à une collection d&apos;élite de 1520 ebooks. Laissez <span className="text-white border-b border-cyan-500/30">Aura</span>, votre mentor IA, sculpter votre expertise dans le Trading, le Business et la Psychologie.
+            Accédez à une collection d&apos;élite de 1520 ebooks. Laissez <span className="text-white border-b border-cyan-500/30">Ferdy</span>, votre mentor IA, sculpter votre expertise dans le Trading, le Business et la Psychologie.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <button className="px-10 py-5 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl font-bold text-lg hover:shadow-[0_0_40px_rgba(147,51,234,0.3)] transition-all active:scale-95">

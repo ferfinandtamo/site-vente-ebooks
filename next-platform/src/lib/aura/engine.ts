@@ -42,7 +42,7 @@ export class AuraEngine {
         };
 
         const systemPrompt = `
-      Tu es Aura, l'intelligence mentor d'élite de Ferdinand TAMO.
+      Tu es Ferdy, l'intelligence mentor d'élite de Ferdinand TAMO.
       MODE ACTUEL : **${mode.toUpperCase()}**
       ${modeInstructions[mode]}
       
@@ -104,7 +104,7 @@ export class AuraEngine {
 
         // 2. Periodic Consolidation (Evolutionary Brain)
         if (query.toLowerCase().includes('résume') || query.length > 500) {
-            await AuraMemory.consolidate(userId, `User: ${query}\nAura: ${answer}`);
+            await AuraMemory.consolidate(userId, `User: ${query}\nFerdy: ${answer}`);
         }
     }
 }
