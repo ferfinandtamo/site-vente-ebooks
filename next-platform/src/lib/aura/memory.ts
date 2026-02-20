@@ -65,7 +65,7 @@ export class AuraMemory {
     /**
      * Retrieve relevant memories based on a query
      */
-    static async recall(userId: string, query: string, count = 5) {
+    static async recall(userId: string, query: string, count = 5): Promise<MemoryItem[]> {
         const embedding = await this.getEmbedding(query);
 
         const { data, error } = await supabase.rpc('match_aura_memory', {
@@ -80,13 +80,13 @@ export class AuraMemory {
             return [];
         }
 
-        return (data as any[]) || [];
+        return (data as MemoryItem[]) || [];
     }
 
     /**
      * Search for ebooks semantically
      */
-    static async searchEbooks(query: string, count = 3) {
+    static async searchEbooks(query: string, count = 3): Promise<EbookItem[]> {
         const embedding = await this.getEmbedding(query);
 
         const { data, error } = await supabase.rpc('match_ebooks', {
@@ -100,7 +100,7 @@ export class AuraMemory {
             return [];
         }
 
-        return (data as any[]) || [];
+        return (data as EbookItem[]) || [];
     }
 
     /**
