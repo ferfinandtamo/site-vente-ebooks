@@ -41,11 +41,14 @@ export class AuraMemory {
     /**
      * Vectorize content using OpenAI embeddings
      */
-    static async getEmbedding(text: string) {
+    static async getEmbedding(text: string): Promise<number[]> {
         try {
+            // Senior Polish: Truncate to prevent token limit errors and clean text
+            const cleanText = text.slice(0, 8000).replace(/\n/g, ' ');
+
             const response = await openai.embeddings.create({
                 model: "text-embedding-3-small",
-                input: text.replace(/\n/g, ' '),
+                input: cleanText,
             });
             return response.data[0].embedding;
         } catch (error: unknown) {
